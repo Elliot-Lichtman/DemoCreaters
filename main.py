@@ -11,6 +11,10 @@ def drawConnect4Board(board, screen):
         for col in range(7):
             pygame.draw.circle(screen, board[row][col], (75 + col*100, 100+row*100), 45)
 
+    pygame.draw.circle(screen, (0, 0, 0), (20, 30), 2)
+
+    pygame.draw.circle(screen, (0, 0, 0), (730, 670), 2)
+
 
 
 def connect4():
@@ -51,6 +55,8 @@ def connect4():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
 
+                print(pos)
+
                 row = abs(pos[1] - 55) // 100
                 col = abs(pos[0] - 30) // 100
 
@@ -69,6 +75,8 @@ def connect4():
 
 def drawOthelloBoard(board, screen):
 
+    buffer = 50
+
     colors = {
         "white": (255, 255, 255),
         "black": (0, 0, 0),
@@ -77,22 +85,27 @@ def drawOthelloBoard(board, screen):
 
     screen.fill(colors["green"])
 
-    for col in range(8):
+    for col in range(9):
 
-        pygame.draw.line(screen, (0, 0, 0), (col*75, 0), (col*75, 600))
+        pygame.draw.line(screen, (0, 0, 0), (col*75 + buffer, 0 + buffer), (col*75 + buffer, 600 + buffer))
+
+    for row in range(9):
+
+        pygame.draw.line(screen, (0, 0, 0), (0 + buffer, row*75 + buffer), (600 + buffer, row*75 + buffer))
 
     for row in range(8):
-
-        pygame.draw.line(screen, (0, 0, 0), (0, row*75), (600, row*75))
-
         for col in range(8):
             if board[row][col] == "possible":
-                pygame.draw.circle(screen, (0, 0, 0), (37.5 + col * 75, 37.5 + row * 75), 34)
-                pygame.draw.circle(screen, colors["green"], (37.5 + col * 75, 37.5 + row * 75), 33)
+                pygame.draw.circle(screen, (0, 0, 0), (37.5 + buffer + col * 75, 37.5 + buffer + row * 75), 34)
+                pygame.draw.circle(screen, colors["green"], (37.5 + buffer + col * 75, 37.5 + buffer + row * 75), 33)
             elif board[row][col] != "green":
                 #pygame.draw.circle(screen, (0, 0, 0), (37.5+col*75, 37.5+row*75), 34)
-                pygame.draw.circle(screen, colors[board[row][col]], (37.5+col*75, 37.5+row*75), 33)
+                pygame.draw.circle(screen, colors[board[row][col]], (37.5 + buffer + col * 75, 37.5 + buffer + row * 75), 33)
 
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer, buffer), 2)
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer+600, buffer+600), 2)
 
 class Button():
 
@@ -106,7 +119,7 @@ class Button():
 
     def draw(self, screen):
 
-        font = pygame.font.Font("freesansbold.ttf", 60)
+        font = pygame.font.Font("freesansbold.ttf", 30)
 
         pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(self.x-self.width/2, self.y-self.height/2, self.width, self.height))
 
@@ -269,8 +282,8 @@ class Game:
     def __init__(self):
         self.board = []
 
-        currentX = 90
-        currentY = 90
+        currentX = 110
+        currentY = 110
 
         for r in range(4):
             row = []
@@ -279,7 +292,7 @@ class Game:
                 currentX += 160
             self.board.append(copyList(row))
             currentY += 160
-            currentX = 90
+            currentX = 110
 
         self.score = 0
 
@@ -290,10 +303,13 @@ class Game:
             for tile in row:
                 tile.draw(screen)
 
+        pygame.draw.circle(screen, (0, 0, 0), (20, 20), 2)
+        pygame.draw.circle(screen, (0, 0, 0), (680, 680), 2)
+
 
 
 def create2048():
-    screen = pygame.display.set_mode((660, 660))
+    screen = pygame.display.set_mode((700, 700))
 
     game = Game()
 
@@ -310,8 +326,8 @@ def create2048():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
 
-                row = pos[1] // 160
-                col = pos[0] // 160
+                row = (pos[1] - 20) // 160
+                col = (pos[0] - 20) // 160
 
                 game.board[row][col].doubleValue()
 
@@ -325,7 +341,7 @@ def create2048():
 
 def othello():
 
-    screen = pygame.display.set_mode((600, 600))
+    screen = pygame.display.set_mode((700, 700))
 
     colors = {
         "white" : (255, 255, 255),
@@ -363,8 +379,8 @@ def othello():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
 
-                row = pos[1] // 75
-                col = pos[0] // 75
+                row = (pos[1] - 50) // 75
+                col = (pos[0] - 50) // 75
 
                 if board[row][col] == "green":
                     board[row][col] = "white"
@@ -385,11 +401,11 @@ def main():
 
     buttons = []
 
-    buttons.append(Button(250, 100, 400, 100, "Connect Four"))
+    buttons.append(Button(250, 50, 400, 45, "Connect Four"))
 
-    buttons.append(Button(250, 250, 400, 100, "Othello"))
+    buttons.append(Button(250, 100, 400, 45, "Othello"))
 
-    buttons.append(Button(250, 400, 400, 100, "2048"))
+    buttons.append(Button(250, 150, 400, 45, "2048"))
 
     running = True
 
@@ -411,10 +427,13 @@ def main():
                     if button.detectPress(pos[0], pos[1]):
                         if button.text == "Connect Four":
                             connect4()
+                            screen = pygame.display.set_mode((500, 500))
                         elif button.text == "Othello":
                             othello()
+                            screen = pygame.display.set_mode((500, 500))
                         elif button.text == "2048":
                             create2048()
+                            screen = pygame.display.set_mode((500, 500))
 
         screen.fill((100, 100, 100))
 

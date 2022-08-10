@@ -140,47 +140,7 @@ class Button():
 
         return False
 
-def main():
 
-    screen = pygame.display.set_mode((500, 500))
-
-    font = pygame.font.Font("freesansbold.ttf", 60)
-
-    buttons = []
-
-    buttons.append(Button(250, 100, 400, 100, "Connect Four"))
-
-    buttons.append(Button(250, 250, 400, 100, "Othello"))
-
-    running = True
-
-    while running:
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-
-                pos = pygame.mouse.get_pos()
-
-                for button in buttons:
-                    if button.detectPress(pos[0], pos[1]):
-                        if button.text == "Connect Four":
-                            connect4()
-                        elif button.text == "Othello":
-                            othello()
-
-        screen.fill((100, 100, 100))
-
-        for button in buttons:
-            button.draw(screen)
-
-        pygame.display.update()
 
 
 colorDictionary = {"background": (152, 140, 132),
@@ -395,6 +355,130 @@ def othello():
 
         pygame.display.update()
 
+def drawSudokuBoard(board, hBoard, screen):
+
+    font = pygame.font.Font("freesansbold.ttf", 50)
+
+    buffer = 50
+
+    colors = {
+        "white": (255, 255, 255),
+        "black": (0, 0, 0),
+        "w": (255, 255, 255),
+        "r": (255, 200, 200),
+        "b": (200, 230, 255),
+        "h": (255, 255, 200)
+
+    }
+
+    screen.fill(colors["white"])
+
+
+    for row in range(9):
+        for col in range(9):
+
+            pygame.draw.rect(screen, colors[hBoard[row][col]], pygame.Rect(buffer + col*75, buffer+row*75, 75, 75))
+
+            text = board[row][col]
+
+            text = font.render(text, True, (0, 0, 0))
+
+            textBox = text.get_rect()
+
+            textBox.center = (37.5 + buffer + col*75, 37.5 + buffer + row * 75)
+
+            screen.blit(text, textBox)
+
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer, buffer), 2)
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer+600, buffer+600), 2)
+
+    for col in range(10):
+
+        if col % 3 == 0:
+            thickness = 3
+        else:
+            thickness = 1
+
+        pygame.draw.line(screen, (0, 0, 0), (col*75 + buffer, 0 + buffer), (col*75 + buffer, 675 + buffer), thickness)
+
+    for row in range(10):
+
+        if row % 3 == 0:
+            thickness = 3
+        else:
+            thickness = 1
+
+
+        pygame.draw.line(screen, (0, 0, 0), (0 + buffer, row*75 + buffer), (675 + buffer, row * 75 + buffer), thickness)
+
+def sudoku():
+
+    screen = pygame.display.set_mode((775, 775))
+
+    board = [
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+    ]
+
+    hBoard = [
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+        ["w", "w", "w", "w", "w", "w", "w", "w", "w"],
+    ]
+
+    running = True
+
+    selectedSquare = [0, 0]
+
+    while running:
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.KEYDOWN:
+
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+                else:
+                    value = chr(event.key)
+
+                    if value in ("123456789 "):
+                        board[selectedSquare[0]][selectedSquare[1]] = value
+                    else:
+                        hBoard[selectedSquare[0]][selectedSquare[1]] = value
+
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                row = (pos[1] - 50) // 75
+                col = (pos[0] - 50) // 75
+
+                selectedSquare = [row, col]
+
+        drawSudokuBoard(board, hBoard, screen)
+
+        pygame.display.update()
+
+
 def main():
 
     screen = pygame.display.set_mode((500, 500))
@@ -406,6 +490,8 @@ def main():
     buttons.append(Button(250, 100, 400, 45, "Othello"))
 
     buttons.append(Button(250, 150, 400, 45, "2048"))
+
+    buttons.append(Button(250, 200, 400, 45, "Sudoku"))
 
     running = True
 
@@ -433,6 +519,9 @@ def main():
                             screen = pygame.display.set_mode((500, 500))
                         elif button.text == "2048":
                             create2048()
+                            screen = pygame.display.set_mode((500, 500))
+                        elif button.text == "Sudoku":
+                            sudoku()
                             screen = pygame.display.set_mode((500, 500))
 
         screen.fill((100, 100, 100))

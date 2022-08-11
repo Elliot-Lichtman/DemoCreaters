@@ -80,7 +80,7 @@ def drawOthelloBoard(board, screen):
     colors = {
         "white": (255, 255, 255),
         "black": (0, 0, 0),
-        "green" : (50, 150, 50)
+        "green" : (8,148,100)
     }
 
     screen.fill(colors["green"])
@@ -103,9 +103,9 @@ def drawOthelloBoard(board, screen):
                 pygame.draw.circle(screen, colors[board[row][col]], (37.5 + buffer + col * 75, 37.5 + buffer + row * 75), 33)
 
 
-    pygame.draw.circle(screen, (0, 0, 0), (buffer, buffer), 2)
+    pygame.draw.circle(screen, (0, 0, 0), (buffer-20, buffer-20), 2)
 
-    pygame.draw.circle(screen, (0, 0, 0), (buffer+600, buffer+600), 2)
+    pygame.draw.circle(screen, (0, 0, 0), (buffer+620, buffer+620), 2)
 
 class Button():
 
@@ -280,8 +280,9 @@ def create2048():
             if event.type == pygame.QUIT:
                 running = False
 
-            elif event.type == pygame.KEYDOWN and pygame.key == pygame.K_ESCAPE:
-                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
@@ -303,12 +304,6 @@ def othello():
 
     screen = pygame.display.set_mode((700, 700))
 
-    colors = {
-        "white" : (255, 255, 255),
-        "black" : (0, 0, 0),
-        "green" : (0, 1, 0),
-        "possible" : (0, 0, 0)
-    }
 
     board = [
         ["green", "green", "green", "green", "green", "green", "green", "green"],
@@ -367,7 +362,8 @@ def drawSudokuBoard(board, hBoard, screen):
         "w": (255, 255, 255),
         "r": (255, 200, 200),
         "b": (200, 230, 255),
-        "h": (255, 255, 200)
+        "y": (255, 255, 200),
+        "g": (200, 255, 200)
 
     }
 
@@ -390,9 +386,9 @@ def drawSudokuBoard(board, hBoard, screen):
             screen.blit(text, textBox)
 
 
-    pygame.draw.circle(screen, (0, 0, 0), (buffer, buffer), 2)
+    pygame.draw.circle(screen, (0, 0, 0), (buffer-20, buffer-20), 2)
 
-    pygame.draw.circle(screen, (0, 0, 0), (buffer+600, buffer+600), 2)
+    pygame.draw.circle(screen, (0, 0, 0), (buffer+700, buffer+700), 2)
 
     for col in range(10):
 
@@ -479,6 +475,308 @@ def sudoku():
         pygame.display.update()
 
 
+o = pygame.image.load("O.png")
+x = pygame.image.load("X.png")
+grid = pygame.image.load("TicTacToeGrid.png")
+
+grid = pygame.transform.scale(grid, (600, 600))
+x = pygame.transform.scale(x, (150, 150))
+o = pygame.transform.scale(o, (150, 150))
+
+def drawTicTacToeBoard(board, screen):
+
+    screen.fill((255, 255, 255))
+    screen.blit(grid, (50, 50))
+
+    for row in range(3):
+        for col in range(3):
+
+            if board[row][col] == "X":
+                screen.blit(x, (60 + 215*col, 60 + 210*row))
+
+            elif board[row][col] == "O":
+                screen.blit(o, (60 + 215*col, 60 + 210*row))
+
+    pygame.draw.circle(screen, (0, 0, 0), (40, 40), 2)
+    pygame.draw.circle(screen, (0, 0, 0), (660, 660), 2)
+
+
+def ticTacToe():
+    screen = pygame.display.set_mode((700, 700))
+
+    board = [
+        [" ", " ", " "],
+        [" ", " ", " "],
+        [" ", " ", " "],
+    ]
+
+    running = True
+
+    while running:
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.KEYDOWN:
+
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                row = (pos[1] - 50) // 200
+                col = (pos[0] - 50) // 200
+
+                if board[row][col] == " ":
+                    board[row][col] = "X"
+                elif board[row][col] == "X":
+                    board[row][col] = "O"
+                elif board[row][col] == "O":
+                    board[row][col] = " "
+
+        drawTicTacToeBoard(board, screen)
+
+        pygame.display.update()
+
+def drawBoggleBoard(board, hBoard, screen):
+
+    font = pygame.font.Font("freesansbold.ttf", 50)
+
+    buffer = 50
+
+    colors = {
+        "white": (255, 255, 255),
+        "black": (0, 0, 0),
+        "1": (255, 255, 255),
+        "2": (255, 200, 200),
+        "3": (200, 230, 255),
+        "4": (255, 255, 200),
+        "5": (200, 255, 200)
+
+    }
+
+    screen.fill(colors["white"])
+
+
+    for row in range(4):
+        for col in range(4):
+
+            pygame.draw.rect(screen, colors[hBoard[row][col]], pygame.Rect(buffer + col*75, buffer+row*75, 75, 75))
+
+            text = board[row][col]
+
+            text = font.render(text, True, (0, 0, 0))
+
+            textBox = text.get_rect()
+
+            textBox.center = (37.5 + buffer + col*75, 37.5 + buffer + row * 75)
+
+            screen.blit(text, textBox)
+
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer-20, buffer-20), 2)
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer+320, buffer+320), 2)
+
+    for col in range(5):
+
+        pygame.draw.line(screen, (0, 0, 0), (col*75 + buffer, 0 + buffer), (col*75 + buffer, 300 + buffer), 3)
+
+    for row in range(5):
+
+        pygame.draw.line(screen, (0, 0, 0), (0 + buffer, row*75 + buffer), (300 + buffer, row * 75 + buffer), 3)
+
+def boggle():
+
+    screen = pygame.display.set_mode((400, 400))
+
+    board = [
+        [" ", " ", " ", " "],
+        [" ", " ", " ", " "],
+        [" ", " ", " ", " "],
+        [" ", " ", " ", " "],
+    ]
+
+    hBoard = [
+        ["1", "1", "1", "1"],
+        ["1", "1", "1", "1"],
+        ["1", "1", "1", "1"],
+        ["1", "1", "1", "1"],
+    ]
+
+    running = True
+
+    selectedSquare = [0, 0]
+
+    while running:
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.KEYDOWN:
+
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+                else:
+                    value = chr(event.key)
+
+                    if value not in ("123456789 "):
+                        board[selectedSquare[0]][selectedSquare[1]] = value.upper()
+                    else:
+                        hBoard[selectedSquare[0]][selectedSquare[1]] = value
+
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                row = (pos[1] - 50) // 75
+                col = (pos[0] - 50) // 75
+
+                selectedSquare = [row, col]
+
+        drawBoggleBoard(board, hBoard, screen)
+
+        pygame.display.update()
+
+class Square:
+
+    def __init__(self, sideLength, x, y):
+        self.sideLength = sideLength
+        self.x = x
+        self.y = y
+        self.color = (255, 255, 255)
+        self.value = " "
+        self.colorDictionary = {"green": (108, 172, 100), "yellow": (204, 180, 85), "gray": (124, 124, 124)}
+
+    def draw(self, screen):
+        text = self.value
+
+        if self.color == (255, 255, 255):
+            pygame.draw.rect(screen, (0, 0, 0), (self.x - self.sideLength / 2, self.y - self.sideLength / 2, self.sideLength, self.sideLength))
+            pygame.draw.rect(screen, self.color, (self.x - self.sideLength / 2 + 1, self.y - self.sideLength / 2 + 1, self.sideLength-2, self.sideLength-2))
+            text = font.render(text, True, (0, 0, 0))
+
+        else:
+            pygame.draw.rect(screen, self.color, (self.x-self.sideLength/2, self.y-self.sideLength/2, self.sideLength, self.sideLength))
+            text = font.render(text, True, (255, 255, 255))
+
+        textBox = text.get_rect()
+        textBox.center = (self.x, self.y)
+        screen.blit(text, textBox)
+
+    def changeColor(self):
+        if self.color == self.colorDictionary["green"]:
+            self.color = self.colorDictionary["gray"]
+
+        elif self.color == (255, 255, 255):
+            self.color = self.colorDictionary["yellow"]
+
+        elif self.color == self.colorDictionary["yellow"]:
+            self.color = self.colorDictionary["green"]
+
+        else:
+            self.color = (255, 255, 255)
+
+
+
+class Wordle:
+
+    def __init__(self):
+        self.squareGrid = []
+
+        currentX = 100
+        currentY = 100
+
+        for r in range(6):
+            row = []
+            for s in range(5):
+                row.append(Square(80, currentX, currentY))
+                currentX += 90
+            self.squareGrid.append(copyList(row))
+            currentY += 90
+            currentX = 100
+
+        self.firstEmptySquare = [0, 0]
+
+        self.colorDictionary = {"green" : (108,172,100), "yellow" : (204,180,85), "gray" : (124, 124, 124)}
+
+    def draw(self, screen):
+        screen.fill((255, 255, 255))
+        for row in self.squareGrid:
+            for square in row:
+                square.draw(screen)
+
+        pygame.draw.circle(screen, (0, 0, 0), (40, 40), 2)
+        pygame.draw.circle(screen, (0, 0, 0), (520, 610), 2)
+
+    def typeLetter(self, letter):
+
+        self.squareGrid[self.firstEmptySquare[0]][self.firstEmptySquare[1]].value = letter
+
+        if self.firstEmptySquare[1] == 4:
+            self.firstEmptySquare[0] += 1
+            self.firstEmptySquare[1] = 0
+
+        else:
+            self.firstEmptySquare[1] += 1
+
+    def delete(self):
+
+        if self.firstEmptySquare[1] == 0:
+            self.firstEmptySquare[0] -= 1
+            self.firstEmptySquare[1] = 4
+
+        elif self.firstEmptySquare[1] > 0:
+            self.firstEmptySquare[1] -= 1
+
+        self.squareGrid[self.firstEmptySquare[0]][self.firstEmptySquare[1]].value = " "
+
+
+def wordle():
+    game = Wordle()
+
+    screen = pygame.display.set_mode((560, 650))
+
+    running = True
+
+    while running:
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.KEYDOWN:
+
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+                else:
+                    value = chr(event.key)
+
+                    game.typeLetter(value.upper())
+
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                row = (pos[1] - 50) // 90
+                col = (pos[0] - 50) // 90
+
+                game.squareGrid[row][col].changeColor()
+
+        game.draw(screen)
+
+        pygame.display.update()
+
+
 def main():
 
     screen = pygame.display.set_mode((500, 500))
@@ -492,6 +790,12 @@ def main():
     buttons.append(Button(250, 150, 400, 45, "2048"))
 
     buttons.append(Button(250, 200, 400, 45, "Sudoku"))
+
+    buttons.append(Button(250, 250, 400, 45, "Wordle"))
+
+    buttons.append(Button(250, 300, 400, 45, "Boggle"))
+
+    buttons.append(Button(250, 350, 400, 45, "Tic Tac Toe"))
 
     running = True
 
@@ -523,6 +827,19 @@ def main():
                         elif button.text == "Sudoku":
                             sudoku()
                             screen = pygame.display.set_mode((500, 500))
+
+                        elif button.text == "Tic Tac Toe":
+                            ticTacToe()
+                            screen = pygame.display.set_mode((500, 500))
+
+                        elif button.text == "Boggle":
+                            boggle()
+                            screen = pygame.display.set_mode((500, 500))
+
+                        elif button.text == "Wordle":
+                            wordle()
+                            screen = pygame.display.set_mode((500, 500))
+
 
         screen.fill((100, 100, 100))
 

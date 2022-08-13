@@ -414,15 +414,15 @@ def sudoku():
     screen = pygame.display.set_mode((775, 775))
 
     board = [
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        ["6", "8", " ", "2", " ", " ", "1", " ", " "],
+        ["9", " ", " ", "6", "8", "7", " ", " ", " "],
+        [" ", "2", " ", "9", " ", " ", " ", "6", "8"],
+        [" ", " ", " ", " ", "9", " ", "4", " ", "3"],
+        ["3", " ", "9", " ", " ", "6", " ", "5", "1"],
+        [" ", " ", " ", "3", " ", "5", "9", "2", " "],
+        [" ", "9", "8", "1", " ", " ", "7", " ", "4"],
+        ["1", " ", "2", "4", "7", " ", "6", " ", " "],
+        ["7", " ", "4", "5", " ", "8", " ", " ", " "],
     ]
 
     hBoard = [
@@ -776,6 +776,103 @@ def wordle():
 
         pygame.display.update()
 
+images = {
+    "b": pygame.image.load("Bomb.png"),
+    "f": pygame.image.load("Flag.png"),
+    "h": pygame.image.load("Hidden.png"),
+    "r": pygame.image.load("Revealed.png"),
+}
+
+for image in images.keys():
+    images[image] = pygame.transform.scale(images[image], (75, 75))
+
+def drawMinesweeperBoard(board, boardText, screen):
+
+    screen.fill((200, 200, 200))
+
+    font = pygame.font.Font("freesansbold.ttf", 50)
+
+    buffer = 50
+
+    colors = {
+        "1": (0, 0, 255),
+        "2": (0, 255, 0),
+        "3": (255, 0, 0),
+        "4": (0, 0, 100)
+    }
+
+    for row in range(9):
+        for col in range(9):
+            screen.blit(images[board[row][col]], (buffer + 75*col, buffer + 75*row))
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer - 20, buffer - 20), 2)
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer + 700, buffer + 700), 2)
+
+
+def minesweeper():
+
+    screen = pygame.display.set_mode((775, 775))
+
+    selectedSquare = [0, 0]
+
+    board = [
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"],
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"],
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"],
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"],
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"],
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"],
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"],
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"],
+        ["h", "h", "h", "h", "h", "h", "h", "h", "h"]
+    ]
+
+    boardText = [
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    ]
+
+    running = True
+
+    while running:
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.KEYDOWN:
+
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+                if chr(event.key) in "123456fb":
+                    boardText[selectedSquare[0]][selectedSquare[1]] = chr(event.key)
+
+                else:
+                    board[selectedSquare[0]][selectedSquare[1]] = chr(event.key)
+
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                row = (pos[1] - 50) // 75
+                col = (pos[0] - 50) // 75
+
+                selectedSquare = [row, col]
+
+        drawMinesweeperBoard(board, boardText, screen)
+
+        pygame.display.update()
+
 
 def main():
 
@@ -796,6 +893,8 @@ def main():
     buttons.append(Button(250, 300, 400, 45, "Boggle"))
 
     buttons.append(Button(250, 350, 400, 45, "Tic Tac Toe"))
+
+    buttons.append(Button(250, 400, 400, 45, "Minesweeper"))
 
     running = True
 
@@ -840,8 +939,12 @@ def main():
                             wordle()
                             screen = pygame.display.set_mode((500, 500))
 
+                        elif button.text == "Minesweeper":
+                            minesweeper()
+                            screen = pygame.display.set_mode((500, 500))
 
-        screen.fill((100, 100, 100))
+
+        screen.fill((100, 200, 255))
 
         for button in buttons:
             button.draw(screen)

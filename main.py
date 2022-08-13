@@ -450,16 +450,21 @@ def sudoku():
 
             elif event.type == pygame.KEYDOWN:
 
-                if event.key == pygame.K_ESCAPE:
-                    running = False
+                try:
 
-                else:
-                    value = chr(event.key)
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
 
-                    if value in ("123456789 "):
-                        board[selectedSquare[0]][selectedSquare[1]] = value
                     else:
-                        hBoard[selectedSquare[0]][selectedSquare[1]] = value
+                        value = chr(event.key)
+
+                        if value in ("123456789 "):
+                            board[selectedSquare[0]][selectedSquare[1]] = value
+                        else:
+                            hBoard[selectedSquare[0]][selectedSquare[1]] = value
+
+                except:
+                    pass
 
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -620,20 +625,20 @@ def boggle():
                 running = False
 
             elif event.type == pygame.KEYDOWN:
-                
+
                 try:
 
                     if event.key == pygame.K_ESCAPE:
                         running = False
-    
+
                     else:
                         value = chr(event.key)
-    
+
                         if value not in ("123456789 "):
                             board[selectedSquare[0]][selectedSquare[1]] = value.upper()
                         else:
                             hBoard[selectedSquare[0]][selectedSquare[1]] = value
-                
+
                 except:
                     pass
 
@@ -808,7 +813,8 @@ def drawMinesweeperBoard(board, boardText, screen):
         "1": (0, 0, 255),
         "2": (0, 150, 0),
         "3": (255, 0, 0),
-        "4": (0, 0, 100)
+        "4": (0, 0, 100),
+        " ": (0, 0, 0)
     }
 
     for row in range(9):
@@ -818,7 +824,7 @@ def drawMinesweeperBoard(board, boardText, screen):
             except:
                 pass
 
-            if boardText[row][col] in "1234":
+            if boardText[row][col] in "1234 ":
                 text = font.render(boardText[row][col], True, (colors[boardText[row][col]]))
 
                 rect = text.get_rect()
@@ -885,7 +891,7 @@ def minesweeper():
                     if event.key == pygame.K_ESCAPE:
                         running = False
 
-                    if chr(event.key) in "123456fb":
+                    if chr(event.key) in "123456fb ":
                         boardText[selectedSquare[0]][selectedSquare[1]] = chr(event.key)
 
                     else:

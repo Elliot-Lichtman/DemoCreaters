@@ -620,17 +620,22 @@ def boggle():
                 running = False
 
             elif event.type == pygame.KEYDOWN:
+                
+                try:
 
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-
-                else:
-                    value = chr(event.key)
-
-                    if value not in ("123456789 "):
-                        board[selectedSquare[0]][selectedSquare[1]] = value.upper()
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
+    
                     else:
-                        hBoard[selectedSquare[0]][selectedSquare[1]] = value
+                        value = chr(event.key)
+    
+                        if value not in ("123456789 "):
+                            board[selectedSquare[0]][selectedSquare[1]] = value.upper()
+                        else:
+                            hBoard[selectedSquare[0]][selectedSquare[1]] = value
+                
+                except:
+                    pass
 
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -755,13 +760,18 @@ def wordle():
 
             elif event.type == pygame.KEYDOWN:
 
-                if event.key == pygame.K_ESCAPE:
-                    running = False
+                try:
 
-                else:
-                    value = chr(event.key)
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
 
-                    game.typeLetter(value.upper())
+                    else:
+                        value = chr(event.key)
+
+                        game.typeLetter(value.upper())
+
+                except:
+                    pass
 
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -790,20 +800,40 @@ def drawMinesweeperBoard(board, boardText, screen):
 
     screen.fill((200, 200, 200))
 
-    font = pygame.font.Font("freesansbold.ttf", 50)
-
     buffer = 50
+
+    font = pygame.font.Font("freesansbold.ttf", 50)
 
     colors = {
         "1": (0, 0, 255),
-        "2": (0, 255, 0),
+        "2": (0, 150, 0),
         "3": (255, 0, 0),
         "4": (0, 0, 100)
     }
 
     for row in range(9):
         for col in range(9):
-            screen.blit(images[board[row][col]], (buffer + 75*col, buffer + 75*row))
+            try:
+                screen.blit(images[board[row][col]], (buffer + 75*col, buffer + 75*row))
+            except:
+                pass
+
+            if boardText[row][col] in "1234":
+                text = font.render(boardText[row][col], True, (colors[boardText[row][col]]))
+
+                rect = text.get_rect()
+
+                rect.center = (buffer + 75*col + 75/2, buffer+75*row + 75/2)
+
+                screen.blit(text, rect)
+
+            else:
+                try:
+                    screen.blit(images[boardText[row][col]], (buffer + 75*col, buffer + 75*row))
+                except:
+                    pass
+
+
 
     pygame.draw.circle(screen, (0, 0, 0), (buffer - 20, buffer - 20), 2)
 
@@ -850,15 +880,19 @@ def minesweeper():
                 running = False
 
             elif event.type == pygame.KEYDOWN:
+                try:
 
-                if event.key == pygame.K_ESCAPE:
-                    running = False
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
 
-                if chr(event.key) in "123456fb":
-                    boardText[selectedSquare[0]][selectedSquare[1]] = chr(event.key)
+                    if chr(event.key) in "123456fb":
+                        boardText[selectedSquare[0]][selectedSquare[1]] = chr(event.key)
 
-                else:
-                    board[selectedSquare[0]][selectedSquare[1]] = chr(event.key)
+                    else:
+                        board[selectedSquare[0]][selectedSquare[1]] = chr(event.key)
+
+                except:
+                    pass
 
 
             elif event.type == pygame.MOUSEBUTTONDOWN:

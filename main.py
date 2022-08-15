@@ -1021,9 +1021,133 @@ def maze():
 
         pygame.display.update()
 
+WQueen = pygame.image.load("White Queen.png")
+WQueen = pygame.transform.scale(WQueen, (80, 80))
+
+def drawBackground(screen):
+    # Colors in the black squares
+
+    colors = {
+        "dark" : (90, 60, 50),
+        "light" : (200, 170, 160)
+    }
+
+    colors = {
+        "dark" : (209, 138, 71),
+        "light" : (252,205,157)
+    }
+
+
+    screen.fill((255, 255, 255))
+    pygame.draw.rect(screen, colors["dark"], pygame.Rect(50, 50, 640, 640))
+
+
+    # ignore the janky booleans this just alternates squares
+    color = True
+    startRow = True
+    for r in range(8):
+        if startRow:
+            color = True
+            startRow = False
+        else:
+            color = False
+            startRow = True
+        for c in range(8):
+            if color:
+                color = False
+                pygame.draw.rect(screen, colors["light"], pygame.Rect(50+r * 80, 50+c * 80, 80, 80))
+            else:
+                color = True
+
+    """for r in range(9):
+        pygame.draw.line(screen, (0, 0, 0), (50, 50+r*80), (690, 50 + r*80), 2)
+
+
+    for c in range(9):
+        pygame.draw.line(screen, (0, 0, 0), (50+c*80, 50), (50 + c*80, 690), 2)"""
+
+# This function will draw the pieces on top of the board in the right squares. The input is the board as a string
+def drawPieces(board, screen):
+    pieceCounter = 0
+    for piece in board:
+        # calculate the row and col of the square. We can use this to get the coords we want for the image.
+        col = pieceCounter % 8
+        row = pieceCounter // 8
+        if piece == "A":
+            screen.blit(WQueen, (50+80*col, 50+80*row))
+
+        pieceCounter += 1
+
+def drawChessBoard(board, screen):
+
+    drawBackground(screen)
+
+    drawPieces(board, screen)
+
+    pygame.draw.circle(screen, (0, 0, 0), (30, 30), 2)
+    pygame.draw.circle(screen, (0, 0, 0), (720, 720), 2)
+
+def chess():
+
+    screen = pygame.display.set_mode((740, 740))
+
+    board = "GGGGAGGGGAGGGGGGGGGAGGGGGGGGGGAGGGAGGGGGGGGGGGGAGGGGGAGGAGGGGGGG"
+
+    running = True
+
+    while running:
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                row = (pos[1] - 50) // 80
+                col = (pos[0] - 50) // 80
+
+                if board[row*8 + col] == "G":
+                    newBoard = ""
+                    counter = 0
+
+                    for letter in board:
+                        if counter == row*8 + col:
+                            newBoard += "A"
+                        else:
+                            newBoard += letter
+                        counter += 1
+
+                    board = newBoard
+
+                else:
+                    newBoard = ""
+                    counter = 0
+
+                    for letter in board:
+                        if counter == row * 8 + col:
+                            newBoard += "G"
+                        else:
+                            newBoard += letter
+
+                        counter += 1
+
+                    board = newBoard
+
+        drawChessBoard(board, screen)
+        pygame.display.update()
+
+
+
+
 def main():
 
-    screen = pygame.display.set_mode((500, 500))
+    screen = pygame.display.set_mode((500, 600))
 
     buttons = []
 
@@ -1045,6 +1169,8 @@ def main():
 
     buttons.append(Button(250, 450, 400, 45, "Maze"))
 
+    buttons.append(Button(250, 500, 400, 45, "8 Queens"))
+
     running = True
 
     while running:
@@ -1065,36 +1191,40 @@ def main():
                     if button.detectPress(pos[0], pos[1]):
                         if button.text == "Connect Four":
                             connect4()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
                         elif button.text == "Othello":
                             othello()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
                         elif button.text == "2048":
                             create2048()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
                         elif button.text == "Sudoku":
                             sudoku()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
 
                         elif button.text == "Tic Tac Toe":
                             ticTacToe()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
 
                         elif button.text == "Boggle":
                             boggle()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
 
                         elif button.text == "Wordle":
                             wordle()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
 
                         elif button.text == "Minesweeper":
                             minesweeper()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
 
                         elif button.text == "Maze":
                             maze()
-                            screen = pygame.display.set_mode((500, 500))
+                            screen = pygame.display.set_mode((500, 600))
+
+                        elif button.text == "8 Queens":
+                            chess()
+                            screen = pygame.display.set_mode((500, 600))
 
 
         screen.fill((100, 200, 255))

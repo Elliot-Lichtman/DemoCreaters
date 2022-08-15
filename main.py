@@ -923,17 +923,18 @@ def drawMaze(board, hBoard, screen):
     colors = {
         "w": (255, 255, 255),
         "b": (0, 0, 0),
-        "r": (255, 200, 200),
-        "g": (200, 255, 200),
-        "u": (200, 200, 255)
+        "r": (255, 100, 100),
+        "g": (100, 255, 100),
+        "u": (100, 100, 255),
+        "h": (124, 124, 124)
 
     }
 
     screen.fill(colors["w"])
 
 
-    for row in range(4):
-        for col in range(5):
+    for row in range(5):
+        for col in range(4):
 
             pygame.draw.rect(screen, colors[hBoard[row][col]], pygame.Rect(buffer + col*75, buffer+row*75, 75, 75))
 
@@ -941,32 +942,40 @@ def drawMaze(board, hBoard, screen):
 
     pygame.draw.circle(screen, (0, 0, 0), (buffer-20, buffer-20), 2)
 
-    pygame.draw.circle(screen, (0, 0, 0), (buffer+395, buffer+375), 2)
+    pygame.draw.circle(screen, (0, 0, 0), (buffer+325, buffer+395), 2)
 
-    for col in range(6):
+    for col in range(5):
 
-        pygame.draw.line(screen, (0, 0, 0), (col*75 + buffer, 0 + buffer), (col*75 + buffer, 300 + buffer), 3)
+        pygame.draw.line(screen, (0, 0, 0), (col*75 + buffer, 0 + buffer), (col*75 + buffer, 375 + buffer), 3)
+
+    for row in range(6):
+
+        pygame.draw.line(screen, (0, 0, 0), (0 + buffer, row*75 + buffer), (300 + buffer, row * 75 + buffer), 3)
 
     for row in range(5):
+        for col in range(5):
 
-        pygame.draw.line(screen, (0, 0, 0), (0 + buffer, row*75 + buffer), (375 + buffer, row * 75 + buffer), 3)
+            if board[row][col] == "h":
+                pygame.draw.rect(screen, colors["h"], pygame.Rect(buffer + col*75, buffer+row*75, 75, 75))
 
 def maze():
 
-    screen = pygame.display.set_mode((475, 400))
+    screen = pygame.display.set_mode((400, 475))
 
     board = [
-        [" ", " ", " ", " "],
-        [" ", " ", " ", " "],
-        [" ", " ", " ", " "],
-        [" ", " ", " ", " "],
+        [" ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " "],
     ]
 
     hBoard = [
-        ["r", "w", "w", "b", "w"],
-        ["w", "w", "b", "b", "w"],
-        ["w", "b", "w", "w", "w"],\
-        ["w", "w", "w", "b", "g"],
+        ["r", "w", "w", "w", "w"],
+        ["w", "b", "w", "b", "b"],
+        ["w", "b", "w", "b", "w"],
+        ["w", "b", "b", "b", "w"],
+        ["w", "w", "w", "g", "g"],
     ]
 
     running = True
@@ -993,6 +1002,8 @@ def maze():
                         if value in "wbrgu":
                             hBoard[selectedSquare[0]][selectedSquare[1]] = value
 
+                        else:
+                            board[selectedSquare[0]][selectedSquare[1]] = value
 
                 except:
                     pass

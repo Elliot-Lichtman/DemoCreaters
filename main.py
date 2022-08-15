@@ -655,6 +655,7 @@ def boggle():
 
         pygame.display.update()
 
+
 class Square:
 
     def __init__(self, sideLength, x, y):
@@ -913,6 +914,101 @@ def minesweeper():
 
         pygame.display.update()
 
+def drawMaze(board, hBoard, screen):
+
+    font = pygame.font.Font("freesansbold.ttf", 50)
+
+    buffer = 50
+
+    colors = {
+        "w": (255, 255, 255),
+        "b": (0, 0, 0),
+        "r": (255, 200, 200),
+        "g": (200, 255, 200),
+        "u": (200, 200, 255)
+
+    }
+
+    screen.fill(colors["w"])
+
+
+    for row in range(4):
+        for col in range(5):
+
+            pygame.draw.rect(screen, colors[hBoard[row][col]], pygame.Rect(buffer + col*75, buffer+row*75, 75, 75))
+
+
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer-20, buffer-20), 2)
+
+    pygame.draw.circle(screen, (0, 0, 0), (buffer+395, buffer+375), 2)
+
+    for col in range(6):
+
+        pygame.draw.line(screen, (0, 0, 0), (col*75 + buffer, 0 + buffer), (col*75 + buffer, 300 + buffer), 3)
+
+    for row in range(5):
+
+        pygame.draw.line(screen, (0, 0, 0), (0 + buffer, row*75 + buffer), (375 + buffer, row * 75 + buffer), 3)
+
+def maze():
+
+    screen = pygame.display.set_mode((475, 400))
+
+    board = [
+        [" ", " ", " ", " "],
+        [" ", " ", " ", " "],
+        [" ", " ", " ", " "],
+        [" ", " ", " ", " "],
+    ]
+
+    hBoard = [
+        ["r", "w", "w", "b", "w"],
+        ["w", "w", "b", "b", "w"],
+        ["w", "b", "w", "w", "w"],\
+        ["w", "w", "w", "b", "g"],
+    ]
+
+    running = True
+
+    selectedSquare = [0, 0]
+
+    while running:
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.KEYDOWN:
+
+                try:
+
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
+
+                    else:
+                        value = chr(event.key)
+
+                        if value in "wbrgu":
+                            hBoard[selectedSquare[0]][selectedSquare[1]] = value
+
+
+                except:
+                    pass
+
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                row = (pos[1] - 50) // 75
+                col = (pos[0] - 50) // 75
+
+                selectedSquare = [row, col]
+
+        drawMaze(board, hBoard, screen)
+
+        pygame.display.update()
 
 def main():
 
@@ -935,6 +1031,8 @@ def main():
     buttons.append(Button(250, 350, 400, 45, "Tic Tac Toe"))
 
     buttons.append(Button(250, 400, 400, 45, "Minesweeper"))
+
+    buttons.append(Button(250, 450, 400, 45, "Maze"))
 
     running = True
 
@@ -981,6 +1079,10 @@ def main():
 
                         elif button.text == "Minesweeper":
                             minesweeper()
+                            screen = pygame.display.set_mode((500, 500))
+
+                        elif button.text == "Maze":
+                            maze()
                             screen = pygame.display.set_mode((500, 500))
 
 

@@ -1142,8 +1142,46 @@ def chess():
         drawChessBoard(board, screen)
         pygame.display.update()
 
+coin = pygame.image.load("Coin.png")
+coin = pygame.transform.scale(coin, (75, 75))
 
+def drawCoinGame(screen, coins):
 
+    screen.fill((255, 255, 255))
+
+    for c in range(12):
+        if coins[c] % 3 == 0:
+            screen.blit(coin, (c*85 + 50, 100-37.5))
+        elif coins[c] % 3 == 1:
+            pygame.draw.circle(screen, (0, 0, 0), (c*85 + 87.5, 100), 37.5)
+            pygame.draw.circle(screen, (255, 255, 255), (c*85 + 87.5, 100), 35)
+
+    pygame.draw.circle(screen, (0, 0, 0), (20, 40), 2)
+    pygame.draw.circle(screen, (0, 0, 0), (1100, 160), 2)
+
+def coinGame():
+    screen = pygame.display.set_mode((1120, 200))
+
+    running = True
+    coins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                index = (pos[0] - 50) // 85
+
+                coins[index] += 1
+
+        drawCoinGame(screen, coins)
+        pygame.display.update()
 
 def main():
 
@@ -1170,6 +1208,8 @@ def main():
     buttons.append(Button(250, 450, 400, 45, "Maze"))
 
     buttons.append(Button(250, 500, 400, 45, "8 Queens"))
+
+    buttons.append(Button(250, 550, 400, 45, "Coin Game"))
 
     running = True
 
@@ -1224,6 +1264,10 @@ def main():
 
                         elif button.text == "8 Queens":
                             chess()
+                            screen = pygame.display.set_mode((500, 600))
+
+                        elif button.text == "Coin Game":
+                            coinGame()
                             screen = pygame.display.set_mode((500, 600))
 
 

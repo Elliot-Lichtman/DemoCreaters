@@ -1238,10 +1238,6 @@ def drawCoinGame(screen, coins):
     pygame.draw.circle(screen, (0, 0, 0), (20, 40), 2)
     pygame.draw.circle(screen, (0, 0, 0), (1100, 160), 2)
 
-def blackJack():
-
-    
-
 def drawNetwork(screen, layerCounts, labelsGrid, connectionsDict, buttonText, stage):
 
     width = 300

@@ -4,13 +4,34 @@ pygame.init()
 
 
 def drawConnect4Board(board, screen):
+    colors = {
+        "white": (255, 255, 255),
+        "red": (75, 75, 75),
+        "yellow": (190, 190, 190)
+    }
 
-    screen.fill((50, 50, 150))
+    screen.fill((240, 240, 240))
 
     for row in range(6):
         for col in range(7):
-            pygame.draw.circle(screen, board[row][col], (75 + col*100, 100+row*100), 45)
+            pygame.draw.circle(screen, (0, 0, 0), (75+col*100, 100+row*100), 47)
+            pygame.draw.circle(screen, colors[board[row][col]], (75 + col*100, 100+row*100), 45)
 
+            if board[row][col] == "yellow":
+                font = pygame.font.Font("freesansbold.ttf", 60)
+                text = "P"
+                text = font.render(text, True, (0, 0, 0))
+                textBox = text.get_rect()
+                textBox.center = (75 + col*100, 100 + row*100)
+                screen.blit(text, textBox)
+
+            if board[row][col] == "red":
+                font = pygame.font.Font("freesansbold.ttf", 60)
+                text = "C"
+                text = font.render(text, True, (255, 255, 255))
+                textBox = text.get_rect()
+                textBox.center = (75 + col*100, 100 + row*100)
+                screen.blit(text, textBox)
     pygame.draw.circle(screen, (0, 0, 0), (20, 30), 2)
 
     pygame.draw.circle(screen, (0, 0, 0), (730, 670), 2)
@@ -21,11 +42,7 @@ def connect4():
 
     screen = pygame.display.set_mode((750, 700))
 
-    colors = {
-        "white" : (255, 255, 255),
-        "red" : (255, 100, 100),
-        "yellow" : (200, 200, 100)
-    }
+
 
     board = [
         ["white", "white", "white", "white", "white", "white", "white"],
@@ -143,17 +160,17 @@ class Button():
 
 
 
-colorDictionary = {"background": (152, 140, 132),
-                   " ": (188,173,159),
-                   "2": (238, 228, 218),
-                   "4": (238, 225, 201),
-                   "8": (243,178,122),
-                   "16": (247, 149, 100),
-                   "32":(247,125,95),
-                   "64": (248,92,60),
-                   "128+":(237,208,115),
-                   "blackText":(119,110,101),
-                   "whiteText":(248, 246, 242)
+colorDictionary = {"background": (130, 130, 130),
+                   " ": (180, 180, 180),
+                   "2": (220, 220, 220),
+                   "4": (200, 200, 200),
+                   "8": (180, 180, 180),
+                   "16": (160, 160, 160),
+                   "32":(110,110,110),
+                   "64": (90,90,90),
+                   "128+":(70,70,70),
+                   "blackText":(0, 0, 0),
+                   "whiteText":(255, 255, 255)
                    }
 
 textColorDictionary = {
@@ -664,7 +681,7 @@ class Square:
         self.y = y
         self.color = (255, 255, 255)
         self.value = " "
-        self.colorDictionary = {"green": (108, 172, 100), "yellow": (204, 180, 85), "gray": (124, 124, 124)}
+        self.colorDictionary = {"white": (255, 255, 255), "black": (0, 0, 0), "green": (100, 100, 100), "yellow": (124, 124, 124), "gray": (200, 200, 200)}
 
     def draw(self, screen):
         text = self.value
@@ -673,13 +690,28 @@ class Square:
             pygame.draw.rect(screen, (0, 0, 0), (self.x - self.sideLength / 2, self.y - self.sideLength / 2, self.sideLength, self.sideLength))
             pygame.draw.rect(screen, self.color, (self.x - self.sideLength / 2 + 1, self.y - self.sideLength / 2 + 1, self.sideLength-2, self.sideLength-2))
             text = font.render(text, True, (0, 0, 0))
+        elif self.color == self.colorDictionary["gray"]:
 
+            pygame.draw.rect(screen, self.color, (self.x-self.sideLength/2, self.y-self.sideLength/2, self.sideLength, self.sideLength))
+            text = font.render(text, True, self.colorDictionary["black"])
+            pygame.draw.rect(screen, (0, 0, 0), (self.x - self.sideLength / 2, self.y - self.sideLength / 2, self.sideLength, self.sideLength), 2)
+            #for i in range(self.sideLength//4):
+            #    pygame.draw.line(screen, self.colorDictionary["black"], (self.x-self.sideLength/2 + 4*i, self.y - self.sideLength/2), (self.x+self.sideLength/2, self.y+self.sideLength/2- 4*i), 2)
+            for i in range(self.sideLength//4):
+                pygame.draw.line(screen, self.colorDictionary["white"], (self.x-self.sideLength/2 + 4*i, self.y - self.sideLength/2), (self.x+self.sideLength/2 - 2, self.y+self.sideLength/2- 4*i - 2), 2)
+                pygame.draw.line(screen, self.colorDictionary["white"],(self.x - self.sideLength / 2, self.y - self.sideLength / 2 + 4 * i), (self.x + self.sideLength / 2 - 4 * i - 2, self.y + self.sideLength / 2 - 2), 2)
+
+            pygame.draw.rect(screen, (0, 0, 0), (self.x - self.sideLength / 2, self.y - self.sideLength / 2, self.sideLength, self.sideLength), 2)
         else:
             pygame.draw.rect(screen, self.color, (self.x-self.sideLength/2, self.y-self.sideLength/2, self.sideLength, self.sideLength))
-            text = font.render(text, True, (255, 255, 255))
+            text = font.render(text, True, self.colorDictionary["white"])
+            pygame.draw.rect(screen, (0, 0, 0), (self.x - self.sideLength / 2, self.y - self.sideLength / 2, self.sideLength, self.sideLength), 2)
+            for i in range(self.sideLength//4):
+                pygame.draw.line(screen, self.colorDictionary["black"], (self.x-self.sideLength/2 + 4*i, self.y - self.sideLength/2), (self.x+self.sideLength/2 - 2, self.y+self.sideLength/2- 4*i - 2), 2)
+                pygame.draw.line(screen, self.colorDictionary["black"],(self.x - self.sideLength / 2, self.y - self.sideLength / 2 + 4 * i), (self.x + self.sideLength / 2 - 4 * i - 2, self.y + self.sideLength / 2 - 2), 2)
 
         textBox = text.get_rect()
-        textBox.center = (self.x, self.y)
+        textBox.center = (self.x, self.y+3)
         screen.blit(text, textBox)
 
     def changeColor(self):
@@ -1027,14 +1059,16 @@ WQueen = pygame.transform.scale(WQueen, (80, 80))
 def drawBackground(screen):
     # Colors in the black squares
 
-    colors = {
-        "dark" : (90, 60, 50),
-        "light" : (200, 170, 160)
-    }
+
 
     colors = {
         "dark" : (209, 138, 71),
         "light" : (252,205,157)
+    }
+
+    colors = {
+        "dark": (124, 124, 124),  # (90, 60, 50),
+        "light": (200, 200, 200)  # (200, 170, 160)
     }
 
 
@@ -1067,7 +1101,7 @@ def drawBackground(screen):
         pygame.draw.line(screen, (0, 0, 0), (50+c*80, 50), (50 + c*80, 690), 2)"""
 
 # This function will draw the pieces on top of the board in the right squares. The input is the board as a string
-def drawPieces(board, screen):
+def drawPieces(board, circles, screen):
     pieceCounter = 0
     for piece in board:
         # calculate the row and col of the square. We can use this to get the coords we want for the image.
@@ -1078,11 +1112,21 @@ def drawPieces(board, screen):
 
         pieceCounter += 1
 
-def drawChessBoard(board, screen):
+    pieceCounter = 0
+    for piece in circles:
+        # calculate the row and col of the square. We can use this to get the coords we want for the image.
+        col = pieceCounter % 8
+        row = pieceCounter // 8
+        if piece == "C":
+            pygame.draw.circle(screen, (0, 0, 0), (90+80*col, 90+80*row), 40, 5)
+
+        pieceCounter += 1
+
+def drawChessBoard(board, circles, screen):
 
     drawBackground(screen)
 
-    drawPieces(board, screen)
+    drawPieces(board, circles, screen)
 
     pygame.draw.circle(screen, (0, 0, 0), (30, 30), 2)
     pygame.draw.circle(screen, (0, 0, 0), (720, 720), 2)
@@ -1092,6 +1136,7 @@ def chess():
     screen = pygame.display.set_mode((740, 740))
 
     board = "GGGGAGGGGAGGGGGGGGGAGGGGGGGGGGAGGGAGGGGGGGGGGGGAGGGGGAGGAGGGGGGG"
+    circles = "________________________________________________________________"
 
     running = True
 
@@ -1105,6 +1150,40 @@ def chess():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+
+                if event.key == pygame.K_c:
+                    pos = pygame.mouse.get_pos()
+
+                    row = (pos[1] - 50) // 80
+                    col = (pos[0] - 50) // 80
+
+                    if circles[row * 8 + col] == "_":
+                        newBoard = ""
+                        counter = 0
+
+                        for letter in circles:
+                            if counter == row * 8 + col:
+                                newBoard += "C"
+                            else:
+                                newBoard += letter
+                            counter += 1
+
+                        circles = newBoard
+
+                    else:
+                        newBoard = ""
+                        counter = 0
+
+                        for letter in circles:
+                            if counter == row * 8 + col:
+                                newBoard += "_"
+                            else:
+                                newBoard += letter
+
+                            counter += 1
+
+                        circles = newBoard
+
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
@@ -1139,7 +1218,7 @@ def chess():
 
                     board = newBoard
 
-        drawChessBoard(board, screen)
+        drawChessBoard(board, circles, screen)
         pygame.display.update()
 
 coin = pygame.image.load("Coin.png")
@@ -1158,6 +1237,226 @@ def drawCoinGame(screen, coins):
 
     pygame.draw.circle(screen, (0, 0, 0), (20, 40), 2)
     pygame.draw.circle(screen, (0, 0, 0), (1100, 160), 2)
+
+def blackJack():
+
+    
+
+def drawNetwork(screen, layerCounts, labelsGrid, connectionsDict, buttonText, stage):
+
+    width = 300
+
+    index = 0
+    for layer in layerCounts:
+
+        buffer = 90
+        font = pygame.font.Font("freesansbold.ttf", 30)
+
+        if layer % 2 != 0:
+            buffer = 180
+            if index < len(layerCounts) - 1:
+                for node in range(layerCounts[index + 1]):
+                    if str(index)+str(layer//2)+str(index+1)+str(node) in connectionsDict:
+                        pygame.draw.line(screen, (0, 0, 0), (width / 2 + width * index + 70, 600), (
+                        width / 2 + width * (index + 1) - 70,
+                        180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 9)
+
+                    else:
+                        pygame.draw.line(screen, (120, 120, 120), (width/2 + width * index+70, 600), (width/2 + width * (index + 1)-70, 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 3)
+
+            pygame.draw.circle(screen, (255, 255, 255), (width/2 + width*index, 600), 67)
+            pygame.draw.circle(screen, (0, 0, 0), (width/2 + width*index, 600), 70, 3)
+
+            if stage >= 1:
+                text = labelsGrid[index][layer//2]
+                text = font.render(text, True, (0, 0, 0))
+                text_rect = text.get_rect()
+                text_rect.center = (width/2 + width*index, 600)
+                screen.blit(text, text_rect)
+
+
+        for i in range(layer//2):
+            if index < len(layerCounts) - 1:
+                for node in range(layerCounts[index + 1]):
+                    if layer % 2 == 1:
+                        if str(index) + str(layer // 2+i+1) + str(index + 1) + str(node) in connectionsDict:
+                            pygame.draw.line(screen, (0, 0, 0), (width/2 + width * index +70, 600 + buffer + 180 * i), (
+                    width/2 + width * (index + 1)-70, 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 9)
+                        else:
+                            pygame.draw.line(screen, (120, 120, 120),
+                                             (width / 2 + width * index + 70, 600 + buffer + 180 * i), (
+                                                 width / 2 + width * (index + 1) - 70,
+                                                 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 3)
+
+                    else:
+                        if str(index) + str(layer // 2+i) + str(index + 1) + str(node) in connectionsDict:
+                            pygame.draw.line(screen, (0, 0, 0), (width/2 + width * index +70, 600 + buffer + 180 * i), (
+                    width/2 + width * (index + 1)-70, 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 9)
+                        else:
+                            pygame.draw.line(screen, (120, 120, 120),
+                                             (width / 2 + width * index + 70, 600 + buffer + 180 * i), (
+                                                 width / 2 + width * (index + 1) - 70,
+                                                 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 3)
+
+            pygame.draw.circle(screen, (255, 255, 255), (width/2 + width*index, 600+ buffer + 180*i), 67)
+            pygame.draw.circle(screen, (0, 0, 0), (width/2 + width*index, 600+ buffer + 180*i), 70, 3)
+
+
+            if stage >= 1:
+                try:
+                    if layer % 2 == 1:
+                        text = labelsGrid[index][layer//2+i+1]
+                    else:
+                        text = labelsGrid[index][layer//2+i]
+                    text = font.render(text, True, (0, 0, 0))
+                    text_rect = text.get_rect()
+                    text_rect.center = (width/2 + width*index, 600+ buffer + 180*i)
+                    screen.blit(text, text_rect)
+                except:
+                    pass
+
+
+            if index < len(layerCounts) - 1:
+                for node in range(layerCounts[index+1]):
+                    if layer % 2 == 1:
+                        if str(index) + str(layer // 2-i-1) + str(index + 1) + str(node) in connectionsDict:
+                            pygame.draw.line(screen, (0, 0, 0), (width/2 + width * index +70, 600 - buffer - 180 * i), (
+                    width/2 + width * (index + 1)-70, 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 9)
+                        else:
+                            pygame.draw.line(screen, (120, 120, 120),
+                                             (width / 2 + width * index + 70, 600 - buffer - 180 * i), (
+                                                 width / 2 + width * (index + 1) - 70,
+                                                 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 3)
+
+                    else:
+                        if str(index) + str(layer // 2-i) + str(index + 1) + str(node) in connectionsDict:
+                            pygame.draw.line(screen, (0, 0, 0), (width/2 + width * index +70, 600 - buffer - 180 * i), (
+                    width/2 + width * (index + 1)-70, 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 9)
+                        else:
+                            pygame.draw.line(screen, (120, 120, 120),
+                                             (width / 2 + width * index + 70, 600 - buffer - 180 * i), (
+                                                 width / 2 + width * (index + 1) - 70,
+                                                 180 * node + 190 + (1000 - 180 * (layerCounts[index + 1])) / 2), 3)
+
+            pygame.draw.circle(screen, (255, 255, 255), (width/2 + width*index, 600 - buffer - 180*i), 67)
+            pygame.draw.circle(screen, (0, 0, 0), (width/2 + width*index, 600 - buffer - 180*i), 70, 3)
+
+
+            if stage >= 1:
+                try:
+                    text = labelsGrid[index][layer//2-1-i]
+                    text = font.render(text, True, (0, 0, 0))
+                    text_rect = text.get_rect()
+                    text_rect.center = (width/2 + width*index, 600 - buffer - 180*i)
+                    screen.blit(text, text_rect)
+                except:
+                    pass
+
+
+
+
+        index += 1
+
+    pygame.draw.rect(screen, (124, 124, 124), pygame.Rect(1650, 550, 300, 100))
+
+    font = pygame.font.Font("freesansbold.ttf", 30)
+
+    text = buttonText
+    text = font.render(text, True, (0, 0, 0))
+    text_rect = text.get_rect()
+    text_rect.center = (1800, 600)
+    screen.blit(text, text_rect)
+
+
+def network():
+
+    connectionsDict = {}
+
+    connection = input("which connection should I highlight?")
+    while connection != "none":
+        connectionsDict[connection] = True
+        connection = input("which connection should I highlight?")
+
+
+
+    labelsGrid = []
+
+    stage = 0
+    stages = ["Add Labels", "Adjust Weights", "Done"]
+    buttonText = "Add Labels"
+
+    screen = pygame.display.set_mode((2000, 1200))
+
+    running = True
+
+    network = [0, 0, 0, 0, 0]
+
+    selectedColumn = -1
+
+    selectedPair = [0, 0]
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                if pygame.key.name(event.key) in "123456789" and stage == 0:
+                    if selectedColumn != -1:
+                        network[selectedColumn] = int(pygame.key.name(event.key))
+                        print(network)
+
+                if stage == 1:
+                    try:
+                        if pygame.key.name(event.key) in "1234567890abcdefghijklmnopqrstuvwxyz":
+                            labelsGrid[selectedPair[0]][selectedPair[1]] += pygame.key.name(event.key)
+                            print(labelsGrid)
+                    except:
+                        pass
+
+                    if event.key == pygame.K_BACKSPACE:
+                        try:
+                            labelsGrid[selectedPair[0]][selectedPair[1]] = labelsGrid[selectedPair[0]][selectedPair[1]][0:-1]
+                        except:
+                            pass
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                print(pos)
+
+                if pos[0] < 1950 and pos[0] > 1650 and pos[1] < 650 and pos[1] > 550:
+                    stage += 1
+                    buttonText = stages[stage]
+                    if stage == 1:
+                        labelsGrid = []
+                        for layer in network:
+                            labelsGrid.append([""]*layer)
+
+
+                if stage == 0:
+                    if pos[1] > 200:
+                        selectedColumn = pos[0] // 300
+                        if selectedColumn >= 5:
+                            selectedColumn = -1
+                        print(selectedColumn)
+
+                if stage == 1:
+                    if pos[1] > 200:
+                        selectedColumn = pos[0] // 300
+                        if selectedColumn >= 5:
+                            selectedColumn = -1
+
+                        #1000 - 180 * (layerCounts[index + 1])) / 2
+                        topBuffer = 110 + (1000-180*(network[selectedColumn]))/2
+                        row = (pos[1]-topBuffer)//180
+                        if row < network[selectedColumn]:
+                            selectedPair = [selectedColumn, int(row)]
+
+
+        screen.fill((255, 255, 255))
+        drawNetwork(screen, network, labelsGrid, connectionsDict, buttonText, stage)
+        pygame.display.update()
 
 def coinGame():
     screen = pygame.display.set_mode((1120, 200))
@@ -1189,27 +1488,27 @@ def main():
 
     buttons = []
 
-    buttons.append(Button(250, 50, 400, 45, "Connect Four"))
+    buttons.append(Button(250, 50, 400, 45, "Connect Four")) # DONE
 
-    buttons.append(Button(250, 100, 400, 45, "Othello"))
+    buttons.append(Button(250, 100, 400, 45, "Othello")) # NO
 
-    buttons.append(Button(250, 150, 400, 45, "2048"))
+    buttons.append(Button(250, 150, 400, 45, "2048")) # DONE
 
-    buttons.append(Button(250, 200, 400, 45, "Sudoku"))
+    buttons.append(Button(250, 200, 400, 45, "Sudoku")) # DONE
 
-    buttons.append(Button(250, 250, 400, 45, "Wordle"))
+    buttons.append(Button(250, 250, 400, 45, "Wordle")) # DONE
 
-    buttons.append(Button(250, 300, 400, 45, "Boggle"))
+    buttons.append(Button(250, 300, 400, 45, "Boggle")) # NO
 
-    buttons.append(Button(250, 350, 400, 45, "Tic Tac Toe"))
+    buttons.append(Button(250, 350, 400, 45, "Tic Tac Toe")) # REDO IMAGES BLACK AND WHITE ON IPAD
 
-    buttons.append(Button(250, 400, 400, 45, "Minesweeper"))
+    buttons.append(Button(250, 400, 400, 45, "Minesweeper")) # NO
 
-    buttons.append(Button(250, 450, 400, 45, "Maze"))
+    buttons.append(Button(250, 450, 400, 45, "Maze")) # NO
 
-    buttons.append(Button(250, 500, 400, 45, "8 Queens"))
+    buttons.append(Button(250, 500, 400, 45, "8 Queens")) # DONE
 
-    buttons.append(Button(250, 550, 400, 45, "Coin Game"))
+    buttons.append(Button(250, 550, 400, 45, "Network")) ## NO
 
     running = True
 
@@ -1266,8 +1565,8 @@ def main():
                             chess()
                             screen = pygame.display.set_mode((500, 600))
 
-                        elif button.text == "Coin Game":
-                            coinGame()
+                        elif button.text == "Network":
+                            network()
                             screen = pygame.display.set_mode((500, 600))
 
 
